@@ -1,0 +1,15 @@
+10:31:56 - logger
+[INFO] log:
+ 11 - ====== WebDriver manager ======
+10:31:56 - logger
+[INFO] log:
+ 11 - Get LATEST chromedriver version for google-chrome 114.0.5735
+10:31:57 - logger
+[INFO] log:
+ 11 - There is no [linux64] chromedriver for browser 114.0.5735 in cache
+10:31:57 - logger
+[INFO] log:
+ 11 - About to download new driver from https://chromedriver.storage.googleapis.com/114.0.5735.90/chromedriver_linux64.zip
+10:31:58 - logger
+[INFO] log:
+ 11 - Driver has been saved in cache [/home/unti1/.wdm/drivers/chromedriver/linux64/114.0.5735]
