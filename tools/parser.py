@@ -105,7 +105,7 @@ class Pars():#Thread):
         self.driver.get(catalog_data[1])
         try:
             self.driver.find_element(By.XPATH,"//section/div/button").click()# ещё
-            time.sleep(2)
+            # time.sleep(1.2)
         except:
             pass
         try:
@@ -196,6 +196,9 @@ class Pars():#Thread):
         sale_cat = list(map(lambda x: self.sale_catalog(x),catalog_data))
         catalog_data.extend(sale_cat)
         catalog_data.reverse()
-        subcatalogs = self.subcatalogs(catalog_data[0])
+        # print(catalog_data)
+        subcatalogs = list(map(lambda data: self.subcatalogs(data),catalog_data))
+        subcatalogs = sum(subcatalogs,[])
         subcatalogs = list(filter(lambda x: x != None, subcatalogs))
+        # print(subcatalogs)
         self.parse_subcatalogs(subcatalogs)
