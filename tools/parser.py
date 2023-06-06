@@ -53,7 +53,7 @@ class Pars():#Thread):
     def write_to_csv(self, filename, data):
         print(f"\n>Сохраняю \"{filename}.csv\" в папку \"data\"")
         # Открываем файл в режиме дозаписи ('a') или создаем новый файл ('w')
-        with open(f"data/{filename}.csv", 'a' if self.file_exists(filename) else 'w', newline='') as csvfile:
+        with open(f"data/{filename}.csv", 'a' if self.file_exists(filename) else 'w', newline='', encoding='utf-8') as csvfile:
             writer = csv.writer(csvfile)
             # Записываем каждую строку данных в файл CSV
             for row in data:
@@ -143,7 +143,7 @@ class Pars():#Thread):
                 tovar_data = []
                 # собирает конкретные значения из товаров
                 for step,link in enumerate(links):
-                    sys.stdout.write(f"\r>Просмотренно товаров [{step}/{len(links)}] |  {link}")
+                    sys.stdout.write(f"\r>Просмотренно товаров [{step+1}/{len(links)}] |  {link}")
                     sys.stdout.flush()
                     tovar_data.append(self.single_tovar_grab(link))
                 self.write_to_csv(title,tovar_data)
