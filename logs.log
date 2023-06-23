@@ -4,3 +4,205 @@
 17:06:05 - logger
 [INFO] log:
  11 - Driver [/home/unti1/.wdm/drivers/chromedriver/linux64/114.0.5735.90/chromedriver] found in cache
+00:06:29 - logger
+[INFO] log:
+ 11 - ====== WebDriver manager ======
+00:06:29 - logger
+[INFO] log:
+ 11 - Get LATEST chromedriver version for google-chrome
+00:06:29 - logger
+[INFO] log:
+ 11 - About to download new driver from https://chromedriver.storage.googleapis.com/114.0.5735.90/chromedriver_linux64.zip
+00:06:31 - logger
+[INFO] log:
+ 11 - Driver has been saved in cache [/home/unti1/.wdm/drivers/chromedriver/linux64/114.0.5735.90]
+00:09:11 - logger
+[INFO] log:
+ 11 - ====== WebDriver manager ======
+00:09:11 - logger
+[INFO] log:
+ 11 - Driver [/home/unti1/.wdm/drivers/chromedriver/linux64/114.0.5735.90/chromedriver] found in cache
+00:09:54 - logger
+[INFO] log:
+ 11 - ====== WebDriver manager ======
+00:09:54 - logger
+[INFO] log:
+ 11 - Driver [/home/unti1/.wdm/drivers/chromedriver/linux64/114.0.5735.90/chromedriver] found in cache
+00:10:23 - logger
+[INFO] log:
+ 11 - ====== WebDriver manager ======
+00:10:23 - logger
+[INFO] log:
+ 11 - Driver [/home/unti1/.wdm/drivers/chromedriver/linux64/114.0.5735.90/chromedriver] found in cache
+21:43:14 - logger
+[INFO] log:
+ 11 - ====== WebDriver manager ======
+21:43:14 - logger
+[INFO] log:
+ 11 - Get LATEST chromedriver version for google-chrome
+21:43:14 - logger
+[INFO] log:
+ 11 - About to download new driver from https://chromedriver.storage.googleapis.com/114.0.5735.90/chromedriver_linux64.zip
+21:43:16 - logger
+[INFO] log:
+ 11 - Driver has been saved in cache [/home/unti1/.wdm/drivers/chromedriver/linux64/114.0.5735.90]
+21:52:32 - logger
+[INFO] log:
+ 11 - ====== WebDriver manager ======
+21:52:32 - logger
+[INFO] log:
+ 11 - Driver [/home/unti1/.wdm/drivers/chromedriver/linux64/114.0.5735.90/chromedriver] found in cache
+22:15:30 - parser
+[ERROR] parse_subcatalogs:
+ 169 - Traceback (most recent call last):
+  File "/home/unti1/MyWork/Orders/clever-styleRU/tools/parser.py", line 166, in parse_subcatalogs
+    tovar_data.append(self.single_tovar_grab(link))
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/unti1/MyWork/Orders/clever-styleRU/tools/parser.py", line 217, in single_tovar_grab
+    description = self.driver.find_element(By.XPATH,'//section[@class="product-descr hidden-mobile"]/p').text
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/unti1/MyWork/Orders/clever-styleRU/lib/python3.11/site-packages/selenium/webdriver/remote/webdriver.py", line 831, in find_element
+    return self.execute(Command.FIND_ELEMENT, {"using": by, "value": value})["value"]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/unti1/MyWork/Orders/clever-styleRU/lib/python3.11/site-packages/selenium/webdriver/remote/webdriver.py", line 440, in execute
+    self.error_handler.check_response(response)
+  File "/home/unti1/MyWork/Orders/clever-styleRU/lib/python3.11/site-packages/selenium/webdriver/remote/errorhandler.py", line 245, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.WebDriverException: Message: disconnected: not connected to DevTools
+  (failed to check if window was closed: disconnected: not connected to DevTools)
+  (Session info: chrome=114.0.5735.133)
+Stacktrace:
+#0 0x55a3b4e0b4e3 <unknown>
+#1 0x55a3b4b3ac76 <unknown>
+#2 0x55a3b4b23623 <unknown>
+#3 0x55a3b4b234c3 <unknown>
+#4 0x55a3b4b3c472 <unknown>
+#5 0x55a3b4baddd5 <unknown>
+#6 0x55a3b4b95de3 <unknown>
+#7 0x55a3b4b6b2dd <unknown>
+#8 0x55a3b4b6c34e <unknown>
+#9 0x55a3b4dcb3e4 <unknown>
+#10 0x55a3b4dcf3d7 <unknown>
+#11 0x55a3b4dd9b20 <unknown>
+#12 0x55a3b4dd0023 <unknown>
+#13 0x55a3b4d9e1aa <unknown>
+#14 0x55a3b4df46b8 <unknown>
+#15 0x55a3b4df4847 <unknown>
+#16 0x55a3b4e04243 <unknown>
+#17 0x7fd10b494b43 <unknown>
+
+
+22:15:30 - parser
+[ERROR] parse_subcatalogs:
+ 169 - Traceback (most recent call last):
+  File "/home/unti1/MyWork/Orders/clever-styleRU/tools/parser.py", line 159, in parse_subcatalogs
+    links = self.parse_subcatalog_page_links(s[-1]) # собирает ссылки на товари из подкаталога
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/unti1/MyWork/Orders/clever-styleRU/tools/parser.py", line 136, in parse_subcatalog_page_links
+    self.driver.get(link)
+  File "/home/unti1/MyWork/Orders/clever-styleRU/lib/python3.11/site-packages/selenium/webdriver/remote/webdriver.py", line 449, in get
+    self.execute(Command.GET, {"url": url})
+  File "/home/unti1/MyWork/Orders/clever-styleRU/lib/python3.11/site-packages/selenium/webdriver/remote/webdriver.py", line 440, in execute
+    self.error_handler.check_response(response)
+  File "/home/unti1/MyWork/Orders/clever-styleRU/lib/python3.11/site-packages/selenium/webdriver/remote/errorhandler.py", line 245, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.WebDriverException: Message: disconnected: not connected to DevTools
+  (failed to check if window was closed: disconnected: not connected to DevTools)
+  (Session info: chrome=114.0.5735.133)
+Stacktrace:
+#0 0x55a3b4e0b4e3 <unknown>
+#1 0x55a3b4b3ac76 <unknown>
+#2 0x55a3b4b23623 <unknown>
+#3 0x55a3b4b234c3 <unknown>
+#4 0x55a3b4b3c472 <unknown>
+#5 0x55a3b4baddd5 <unknown>
+#6 0x55a3b4b95de3 <unknown>
+#7 0x55a3b4b6b2dd <unknown>
+#8 0x55a3b4b6c34e <unknown>
+#9 0x55a3b4dcb3e4 <unknown>
+#10 0x55a3b4dcf3d7 <unknown>
+#11 0x55a3b4dd9b20 <unknown>
+#12 0x55a3b4dd0023 <unknown>
+#13 0x55a3b4d9e1aa <unknown>
+#14 0x55a3b4df46b8 <unknown>
+#15 0x55a3b4df4847 <unknown>
+#16 0x55a3b4e04243 <unknown>
+#17 0x7fd10b494b43 <unknown>
+
+
+22:15:30 - parser
+[ERROR] parse_subcatalogs:
+ 169 - Traceback (most recent call last):
+  File "/home/unti1/MyWork/Orders/clever-styleRU/tools/parser.py", line 159, in parse_subcatalogs
+    links = self.parse_subcatalog_page_links(s[-1]) # собирает ссылки на товари из подкаталога
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/unti1/MyWork/Orders/clever-styleRU/tools/parser.py", line 136, in parse_subcatalog_page_links
+    self.driver.get(link)
+  File "/home/unti1/MyWork/Orders/clever-styleRU/lib/python3.11/site-packages/selenium/webdriver/remote/webdriver.py", line 449, in get
+    self.execute(Command.GET, {"url": url})
+  File "/home/unti1/MyWork/Orders/clever-styleRU/lib/python3.11/site-packages/selenium/webdriver/remote/webdriver.py", line 440, in execute
+    self.error_handler.check_response(response)
+  File "/home/unti1/MyWork/Orders/clever-styleRU/lib/python3.11/site-packages/selenium/webdriver/remote/errorhandler.py", line 245, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.WebDriverException: Message: disconnected: not connected to DevTools
+  (failed to check if window was closed: disconnected: not connected to DevTools)
+  (Session info: chrome=114.0.5735.133)
+Stacktrace:
+#0 0x55a3b4e0b4e3 <unknown>
+#1 0x55a3b4b3ac76 <unknown>
+#2 0x55a3b4b23623 <unknown>
+#3 0x55a3b4b234c3 <unknown>
+#4 0x55a3b4b3c472 <unknown>
+#5 0x55a3b4baddd5 <unknown>
+#6 0x55a3b4b95de3 <unknown>
+#7 0x55a3b4b6b2dd <unknown>
+#8 0x55a3b4b6c34e <unknown>
+#9 0x55a3b4dcb3e4 <unknown>
+#10 0x55a3b4dcf3d7 <unknown>
+#11 0x55a3b4dd9b20 <unknown>
+#12 0x55a3b4dd0023 <unknown>
+#13 0x55a3b4d9e1aa <unknown>
+#14 0x55a3b4df46b8 <unknown>
+#15 0x55a3b4df4847 <unknown>
+#16 0x55a3b4e04243 <unknown>
+#17 0x7fd10b494b43 <unknown>
+
+
+22:15:30 - parser
+[ERROR] parse_subcatalogs:
+ 169 - Traceback (most recent call last):
+  File "/home/unti1/MyWork/Orders/clever-styleRU/tools/parser.py", line 159, in parse_subcatalogs
+    links = self.parse_subcatalog_page_links(s[-1]) # собирает ссылки на товари из подкаталога
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/unti1/MyWork/Orders/clever-styleRU/tools/parser.py", line 136, in parse_subcatalog_page_links
+    self.driver.get(link)
+  File "/home/unti1/MyWork/Orders/clever-styleRU/lib/python3.11/site-packages/selenium/webdriver/remote/webdriver.py", line 449, in get
+    self.execute(Command.GET, {"url": url})
+  File "/home/unti1/MyWork/Orders/clever-styleRU/lib/python3.11/site-packages/selenium/webdriver/remote/webdriver.py", line 440, in execute
+    self.error_handler.check_response(response)
+  File "/home/unti1/MyWork/Orders/clever-styleRU/lib/python3.11/site-packages/selenium/webdriver/remote/errorhandler.py", line 245, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.WebDriverException: Message: disconnected: not connected to DevTools
+  (failed to check if window was closed: disconnected: not connected to DevTools)
+  (Session info: chrome=114.0.5735.133)
+Stacktrace:
+#0 0x55a3b4e0b4e3 <unknown>
+#1 0x55a3b4b3ac76 <unknown>
+#2 0x55a3b4b23623 <unknown>
+#3 0x55a3b4b234c3 <unknown>
+#4 0x55a3b4b3c472 <unknown>
+#5 0x55a3b4baddd5 <unknown>
+#6 0x55a3b4b95de3 <unknown>
+#7 0x55a3b4b6b2dd <unknown>
+#8 0x55a3b4b6c34e <unknown>
+#9 0x55a3b4dcb3e4 <unknown>
+#10 0x55a3b4dcf3d7 <unknown>
+#11 0x55a3b4dd9b20 <unknown>
+#12 0x55a3b4dd0023 <unknown>
+#13 0x55a3b4d9e1aa <unknown>
+#14 0x55a3b4df46b8 <unknown>
+#15 0x55a3b4df4847 <unknown>
+#16 0x55a3b4e04243 <unknown>
+#17 0x7fd10b494b43 <unknown>
+
+

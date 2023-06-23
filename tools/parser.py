@@ -11,11 +11,29 @@ class Pars():#Thread):
             Версии эмуляторов: https://anty.dolphin.ru.com/docs/basic-automation/
             Для Linux сделать предвартилеьно chmo+x ..utils/cromedriver-linux
         """
-        self.based_browser_startUp(False) # обычный запуск без dolphin
+        self.based_browser_startUp(invisable) # обычный запуск без dolphin
         #self.dolphin_browser_startUp(False) # запуск c dolphin
-        self.wait = WebDriverWait(self.driver,10)
-        self.action = ActionChains(self.driver,500)
+        self.wait = WebDriverWait(self.driver,6)
+        self.action = ActionChains(self.driver,250)
 
+    def authorithation(self):
+        self.driver.get("https://clever-style.ru/catalog/")
+        # //div[@data-modal="auth"]/span - вход кнопка
+        self.wait.until(EC.element_to_be_clickable((By.XPATH,"//div[@data-modal='auth']/span")))
+        self.driver.find_element(By.XPATH,"//div[@data-modal='auth']/span").click()
+
+        # //input[@name="email"] - почта
+        # //input[@name="password"] - пароль
+        self.wait.until(EC.element_to_be_clickable((By.XPATH,"//input[@name='email']")))
+        self.driver.find_element(By.XPATH,"//input[@name='email']").send_keys("kashaewa.oxana@yandex.ru")
+        self.driver.find_element(By.XPATH,"//input[@name='password']").send_keys("210807Martin220485Tatyana")
+
+        # //form[@class="auth__form form js-auth-form"]//button[@type="submit"] - кнопка входа
+        self.wait.until(EC.element_to_be_clickable((By.XPATH,'//form[@class="auth__form form js-auth-form"]//button[@type="submit"]')))
+        self.driver.find_element(By.XPATH, '//form[@class="auth__form form js-auth-form"]//button[@type="submit"]').click()
+        time.sleep(5)
+
+    
     def dolphin_browser_startUp(self, PROFILE_ID,invisable):
         """Создание настройка и создания эмуляции браузера
         """ 
@@ -158,7 +176,7 @@ class Pars():#Thread):
             self.action.move_to_element(more)
             self.action.click(more)
             self.action.perform()
-            time.sleep(0.5)
+            time.sleep(0.25)
         except: 
             pass
         
@@ -173,7 +191,7 @@ class Pars():#Thread):
         try:
             img = list(map(lambda x: x.get_attribute("src"), self.driver.find_elements(By.XPATH,'//div[@class="product__slider-container visible"]//img')))
         except:
-            img = ""
+            img = "Не найдены"
         
         colors = []
         try:
@@ -184,12 +202,31 @@ class Pars():#Thread):
                 colors.append( self.driver.find_element(By.XPATH,'//span[@class="product-color__name js-color-name"]').text )
         except:
             pass
+        
+        try:
+            base_cost = self.driver.find_element(By.XPATH,'//b[@class="product__price-price js-basic-price"]').text
+        except:
+            base_cost = "Отсутствует"
+
+        try:
+            sale_cost = self.driver.find_element(By.XPATH,'//b[@class="product__price-price js-discount-price"]').text
+        except:
+            sale_cost = "Отсутствует"
 
         try:
             description = self.driver.find_element(By.XPATH,'//section[@class="product-descr hidden-mobile"]/p').text
         except exceptions.NoSuchElementException:
-            description = "None"
-        return (title,articul,sizes,colors,description,img)
+            description = "Отсутствует"
+        
+        return (title, base_cost, sale_cost, articul, sizes, colors, description, img)
+    
+    def test(self):
+        self.authorithation()
+        catalog_data = self.catalog()
+        sale_cat = list(map(lambda x: self.sale_catalog(x),catalog_data))
+        subcatalogs = self.subcatalogs(catalog_data[0])
+        subcatalogs = list(filter(lambda x: x != None, subcatalogs))
+        self.parse_subcatalogs(subcatalogs)
         
     def main(self):
         catalog_data = self.catalog()
