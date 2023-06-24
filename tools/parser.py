@@ -71,7 +71,7 @@ class Pars():#Thread):
     def write_to_csv(self, filename, data):
         print(f"\n>Сохраняю \"{filename}.csv\" в папку \"data\"")
         # Открываем файл в режиме дозаписи ('a') или создаем новый файл ('w')
-        with open(f"data/{filename}.csv", 'a' if self.file_exists(filename) else 'w', newline='', encoding='utf-8') as csvfile:
+        with open(f"data/{filename}.csv", 'a' if self.file_exists(filename) else 'w', newline='', encoding='cp1251') as csvfile:
             writer = csv.writer(csvfile)
             # Записываем каждую строку данных в файл CSV
             for row in data:
@@ -180,8 +180,8 @@ class Pars():#Thread):
         except: 
             pass
         
-        title = self.driver.find_element(By.XPATH,'//h1[@class="product__title main-title"]').text
-        articul = self.driver.find_element(By.XPATH,'//div[@class="product-about__list-item js-product-qualities-item"][5]').text.replace('Артикул: ','')
+        title = self.driver.find_element(By.XPATH,'//h1[@class="product__title main-title"]').text.replace("\n","")
+        articul = self.driver.find_element(By.XPATH,'//div[@class="product-about__list-item js-product-qualities-item"][5]').text.replace('Артикул:','').replace("\n","")
         
         try:
             sizes = list(map(lambda x: x.text, self.driver.find_elements(By.XPATH,'//div[@class="product-sizes__size js-size-wrap positioned-right"]/button')))
