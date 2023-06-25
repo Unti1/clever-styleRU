@@ -25,9 +25,9 @@ jobs:
         pip install pyinstaller
     - name: Build
       run: |
-        pyinstaller --onefile main.py
+        pyinstaller --onefile test.py
     - name: Upload artifact
       uses: actions/upload-artifact@v3
       with:
-        name: app-${{ matrix.os }}-py${{ matrix.python-version }}
+        name: test-app-${{ matrix.os }}-py${{ matrix.python-version }}
         path: dist/*

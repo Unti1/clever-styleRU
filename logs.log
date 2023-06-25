@@ -206,3 +206,15 @@ Stacktrace:
 #17 0x7fd10b494b43 <unknown>
 
 
+15:29:34 - logger
+[INFO] log:
+ 11 - ====== WebDriver manager ======
+15:29:34 - logger
+[INFO] log:
+ 11 - Get LATEST chromedriver version for google-chrome
+15:29:35 - logger
+[INFO] log:
+ 11 - About to download new driver from https://chromedriver.storage.googleapis.com/114.0.5735.90/chromedriver_linux64.zip
+15:29:36 - logger
+[INFO] log:
+ 11 - Driver has been saved in cache [/home/unti1/.wdm/drivers/chromedriver/linux64/114.0.5735.90]
