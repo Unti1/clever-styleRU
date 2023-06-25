@@ -65,6 +65,10 @@ class Pars():#Thread):
         options = webdriver.ChromeOptions()
         if invisable:
             options.add_argument('--headless')
+        # Отключаем уведомления
+        options.add_argument("--disable-notifications")
+        # Отключаем логирование
+        options.add_experimental_option('excludeSwitches', ['enable-logging'])
         self.driver = webdriver.Chrome(ChromeDriverManager().install(), options=options)
         self.driver.set_window_size(1920, 1080)
 
@@ -166,7 +170,7 @@ class Pars():#Thread):
                     tovar_data.append(self.single_tovar_grab(link))
                 self.write_to_csv(title,tovar_data)
             except:
-                logging.error(traceback.format_exc())
+                logging.error(f"Ошибка сбора данных в каталоге {s[0]} \n{traceback.format_exc()}")
         return
     
     def single_tovar_grab(self,link):
@@ -181,7 +185,8 @@ class Pars():#Thread):
             pass
         
         title = self.driver.find_element(By.XPATH,'//h1[@class="product__title main-title"]').text.replace("\n","")
-        articul = self.driver.find_element(By.XPATH,'//div[@class="product-about__list-item js-product-qualities-item"][5]').text.replace('Артикул:','').replace("\n","")
+
+        articul = self.driver.find_element(By.XPATH,'//div[@class="product-about__list-item js-product-qualities-item"][5]').text.replace("\n","")
         
         try:
             sizes = list(map(lambda x: x.text, self.driver.find_elements(By.XPATH,'//div[@class="product-sizes__size js-size-wrap positioned-right"]/button')))
@@ -223,12 +228,14 @@ class Pars():#Thread):
     def test(self):
         self.authorithation()
         catalog_data = self.catalog()
+        logging.info(catalog_data)
         sale_cat = list(map(lambda x: self.sale_catalog(x),catalog_data))
         subcatalogs = self.subcatalogs(catalog_data[0])
         subcatalogs = list(filter(lambda x: x != None, subcatalogs))
         self.parse_subcatalogs(subcatalogs)
         
     def main(self):
+        self.authorithation()
         catalog_data = self.catalog()
         sale_cat = list(map(lambda x: self.sale_catalog(x),catalog_data))
         catalog_data.extend(sale_cat)
