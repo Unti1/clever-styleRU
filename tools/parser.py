@@ -186,7 +186,13 @@ class Pars():#Thread):
         
         title = self.driver.find_element(By.XPATH,'//h1[@class="product__title main-title"]').text.replace("\n","")
 
-        articul = self.driver.find_element(By.XPATH,'//div[@class="product-about__list-item js-product-qualities-item"][5]').text.replace("\n","")
+        about_tovar = self.driver.find_elements(By.XPATH,'//div[@class="product-about__list-item js-product-qualities-item"]')
+        articul = ""
+        for about in about_tovar:
+            if "Артикул" in about.text:
+                articul = about.text.replace("\n","")
+        if articul == "":
+            articul = "Не найден" 
         
         try:
             sizes = list(map(lambda x: x.text, self.driver.find_elements(By.XPATH,'//div[@class="product-sizes__size js-size-wrap positioned-right"]/button')))
