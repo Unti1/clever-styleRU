@@ -240,10 +240,14 @@ class Pars():#Thread):
     def test(self):
         self.authorithation()
         catalog_data = self.catalog()
-        logging.info(catalog_data)
+        sale_cat = list(map(lambda x: self.sale_catalog(x),catalog_data))
+        catalog_data.extend(sale_cat)
+        catalog_data.reverse()
+        logging.info(f"Список каталогов - {catalog_data}")
         sale_cat = list(map(lambda x: self.sale_catalog(x),catalog_data))
         subcatalogs = self.subcatalogs(catalog_data)
         subcatalogs = list(filter(lambda x: x != None, subcatalogs))
+        print(logging.info(f"Список подкаталогов - {subcatalogs}"))
         self.parse_subcatalogs(subcatalogs,test=True)
         
     def main(self):
