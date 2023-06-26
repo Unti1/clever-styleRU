@@ -150,7 +150,7 @@ class Pars():#Thread):
                 self.driver.find_elements(By.XPATH,'//a[@class="paginations__item"]')[-1].click()
         return(links_list)
     
-    def parse_subcatalogs(self,subcatalogs):
+    def parse_subcatalogs(self,subcatalogs,test=False):
         """Основной модуль парсинга
 
         Args:
@@ -160,13 +160,19 @@ class Pars():#Thread):
             try:
                 title = s[0]
                 print(f"Начинаю сбор для \"{title}\"")
-                links = self.parse_subcatalog_page_links(s[-1]) # собирает ссылки на товари из подкаталога
-                # links = links[:len(links)//5]
+                if test == False:
+                    links = self.parse_subcatalog_page_links(s[-1]) # собирает ссылки на товари из подкаталога
+                else:
+                    links = self.parse_subcatalog_page_links(s[-1])
+                    if len(links) > 0:
+                        links = links[:10]
+                print(f"> Получены {len(links)} ссылок на товар. Собираю информацию...")
                 tovar_data = []
                 # собирает конкретные значения из товаров
+                
                 for step,link in enumerate(links):
-                    sys.stdout.write(f"\r>Просмотренно товаров [{step+1}/{len(links)}] |  {link}")
-                    sys.stdout.flush()
+                    # sys.stdout.write(f"\r>Просмотренно товаров [{step+1}/{len(links)}] |  {link}")
+                    # sys.stdout.flush()
                     tovar_data.append(self.single_tovar_grab(link))
                 self.write_to_csv(title,tovar_data)
             except:
@@ -236,9 +242,9 @@ class Pars():#Thread):
         catalog_data = self.catalog()
         logging.info(catalog_data)
         sale_cat = list(map(lambda x: self.sale_catalog(x),catalog_data))
-        subcatalogs = self.subcatalogs(catalog_data[0])
+        subcatalogs = self.subcatalogs(catalog_data)
         subcatalogs = list(filter(lambda x: x != None, subcatalogs))
-        self.parse_subcatalogs(subcatalogs)
+        self.parse_subcatalogs(subcatalogs,test=True)
         
     def main(self):
         self.authorithation()
