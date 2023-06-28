@@ -3,5 +3,5 @@ lib64
 include
 bin
 pyvenv.cfg
-logs.log
+*.log
 data
