@@ -73,25 +73,14 @@ class Pars():#Thread):
         self.driver.set_window_size(1920, 1080)
 
     def write_to_csv(self, filename, data):
-        import csv 
-
         print(f"\n>Сохраняю \"{filename}.csv\" в папку \"data\"")
-
         # Открываем файл в режиме дозаписи ('a') или создаем новый файл ('w')
         with open(f"data/{filename}.csv", 'a' if self.file_exists(filename) else 'w', newline='', encoding='cp1251') as csvfile:
-            writer = csv.writer(csvfile, delimiter=';', quoting=csv.QUOTE_MINIMAL)
-            
-            #(title, base_cost, sale_cost, articul, sizes, colors, description, img)
-            # Добавляем заголовки колонок
-            header = ['Заголовок', 'Базовая стоимость', 'Стоимость со скидкой', 'Артикул','Размеры','Цвета','Описание','Картинки']  # Замените на свои заголовки
-            writer.writerow(header)
-            
+            writer = csv.writer(csvfile)
             # Записываем каждую строку данных в файл CSV
             for row in data:
                 writer.writerow(row)
-                
         print(f">Данные сохранены")
-
 
     def file_exists(self, filename):
         try:
