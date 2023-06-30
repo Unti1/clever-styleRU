@@ -80,7 +80,7 @@ class Pars():#Thread):
             writer = csv.writer(csvfile, delimiter=';', quoting=csv.QUOTE_MINIMAL)
             #(title, base_cost, sale_cost, articul, sizes, colors, description, img)
             # Добавляем заголовки колонок
-            header = ['Заголовок', 'Базовая стоимость', 'Стоимость со скидкой', 'Артикул','Размеры','Цвета','Описание','Картинки']  # Замените на свои заголовки
+            header = ['Название', 'Базовая цена', 'Цена со скидкой', 'Артикул','Размеры','Цвета','Описание','Фото']  # Замените на свои заголовки
             writer.writerow(header)
             # Записываем каждую строку данных в файл CSV
             for row in data:
@@ -207,11 +207,13 @@ class Pars():#Thread):
         
         try:
             sizes = list(map(lambda x: x.text, self.driver.find_elements(By.XPATH,'//div[@class="product-sizes__size js-size-wrap positioned-right"]/button')))
+            sizes = ",".join(sizes)
         except:
             sizes = []
         
         try:
             img = list(map(lambda x: x.get_attribute("src"), self.driver.find_elements(By.XPATH,'//div[@class="product__slider-container visible"]//img')))
+            img = ",".join(img)
         except:
             img = "Не найдены"
         
@@ -222,16 +224,20 @@ class Pars():#Thread):
                 self.action.click(color_button)
                 self.action.perform()
                 colors.append( self.driver.find_element(By.XPATH,'//span[@class="product-color__name js-color-name"]').text )
+            colors = ",".join(colors)
         except:
             pass
         
         try:
             base_cost = self.driver.find_element(By.XPATH,'//b[@class="product__price-price js-basic-price"]').text
+            base_cost = base_cost[:-5].replace(".",",")
         except:
             base_cost = "Отсутствует"
 
         try:
             sale_cost = self.driver.find_element(By.XPATH,'//b[@class="product__price-price js-discount-price"]').text
+            sale_cost = sale_cost[:-5].replace(".",",")
+            
         except:
             sale_cost = "Отсутствует"
 
