@@ -201,7 +201,7 @@ class Pars():#Thread):
         articul = ""
         for about in about_tovar:
             if "Артикул" in about.text:
-                articul = about.text.replace("\n","")
+                articul = about.text.replace("\n","").replace("Артикул:")
         if articul == "":
             articul = "Не найден" 
         
