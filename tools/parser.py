@@ -80,7 +80,7 @@ class Pars():#Thread):
             writer = csv.writer(csvfile, delimiter=';', quoting=csv.QUOTE_MINIMAL)
             #(title, base_cost, sale_cost, articul, sizes, colors, description, img)
             # Добавляем заголовки колонок
-            header = ['Название', 'Базовая цена', 'Цена со скидкой', 'Артикул','Размеры','Цвета','Описание','Фото']  # Замените на свои заголовки
+            header = ['Название', 'Базовая цена', 'Цена со скидкой', 'Артикул','Размеры','Цвет','Описание','Фото']  # Замените на свои заголовки
             writer.writerow(header)
             # Записываем каждую строку данных в файл CSV
             for row in data:
