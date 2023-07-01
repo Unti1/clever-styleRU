@@ -178,7 +178,26 @@ class Pars():#Thread):
                 for step,link in enumerate(links):
                     # sys.stdout.write(f"\r>Просмотренно товаров [{step+1}/{len(links)}] |  {link}")
                     # sys.stdout.flush()
-                    tovar_data.append(self.single_tovar_grab(link))
+                    tovar = list(self.single_tovar_grab(link))
+                    
+                    # Разбиение по сраным цветам с зависимостью в виде размера
+                    colors = tovar[5].split(";")
+                    sizes = tovar[4]
+                    if len(colors) > 1:
+                        for i in range(len(colors)):
+                            new_tovar = tovar
+                            new_tovar[5] = colors[i]
+                            new_tovar[4] = sizes[i]
+                            tovar_data.append(new_tovar)
+                    else:
+                        if type(tovar[4]) == list:
+                            sizes = ";".join(tovar[4])
+                            tovar[4] = sizes
+                        tovar_data.append(tovar)
+                # Очистка дублей
+                tovar_data = set(tovar_data)
+                tovar_data = list(tovar_data)
+                
                 self.write_to_csv(title,tovar_data)
             except:
                 logging.error(f"Ошибка сбора данных в каталоге {s[0]} \n{traceback.format_exc()}")
@@ -205,28 +224,36 @@ class Pars():#Thread):
         if articul == "":
             articul = "Не найден" 
         
-        try:
-            sizes = list(map(lambda x: x.text, self.driver.find_elements(By.XPATH,'//div[@class="product-sizes__size js-size-wrap positioned-right"]/button')))
-            sizes = ",".join(sizes)
-        except:
-            sizes = []
-        
-        try:
-            img = list(map(lambda x: x.get_attribute("src"), self.driver.find_elements(By.XPATH,'//div[@class="product__slider-container visible"]//img')))
-            img = ",".join(img)
-        except:
-            img = "Не найдены"
-        
         colors = []
+        sizes = [] # зависит от colors
         try:
             for color_button in self.driver.find_elements(By.XPATH,'//section[1]/div[2]/div//button'):
                 self.action.move_to_element(color_button)
                 self.action.click(color_button)
                 self.action.perform()
+                sizes.append(
+                    ";".join(
+                            list(map(lambda x: x.text, self.driver.find_elements(By.XPATH,'//div[@class="product-sizes__size js-size-wrap positioned-right"]/button')))
+                        )
+                    )
                 colors.append( self.driver.find_element(By.XPATH,'//span[@class="product-color__name js-color-name"]').text )
-            colors = ",".join(colors)
+            colors = ";".join(colors)
         except:
-            pass
+            colors = []
+
+        try:
+            if colors == []:
+                sizes = list(map(lambda x: x.text, self.driver.find_elements(By.XPATH,'//div[@class="product-sizes__size js-size-wrap positioned-right"]/button')))
+                sizes = ";".join(sizes)
+        except:
+            sizes = []
+        
+        try:
+            img = list(map(lambda x: x.get_attribute("src"), self.driver.find_elements(By.XPATH,'//div[@class="product__slider-container visible"]//img')))
+            img = ";".join(img)
+        except:
+            img = "Не найдены"
+        
         
         try:
             base_cost = self.driver.find_element(By.XPATH,'//b[@class="product__price-price js-basic-price"]').text
@@ -260,7 +287,27 @@ class Pars():#Thread):
         subcatalogs = list(filter(lambda x: x != None, subcatalogs))
         print(logging.info(f"Список подкаталогов - {subcatalogs}"))
         self.parse_subcatalogs(subcatalogs,test=True)
+
+    def test_pravki(self):
+        self.authorithation()
+        tovar_data = []
+        tovar = list(self.single_tovar_grab("https://clever-style.ru/catalog/zhenskoe/domashnyayaodezhda/tolstovkikhudi_1/clelh12106khudizhenskoe/"))
         
+        colors = tovar[5].split(";")
+        sizes = tovar[4]
+        if len(colors) > 1:
+            print(sizes,colors)
+            for i in range(len(colors)):
+                new_tovar = tovar
+                print(colors[i],sizes[i])
+                new_tovar[5] = colors[i]
+                new_tovar[4] = sizes[i]
+                print(new_tovar)
+                tovar_data.extend(new_tovar)
+        else:
+            tovar_data.append(tovar)
+        print(tovar_data)
+
     def main(self):
         self.authorithation()
         catalog_data = self.catalog()
