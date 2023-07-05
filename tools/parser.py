@@ -155,6 +155,10 @@ class Pars():#Thread):
                 self.driver.find_elements(By.XPATH,'//a[@class="paginations__item"]')[-1].click()
         return(links_list)
     
+    def remove_duplicates(self, lst):
+        unique_list = list(set(map(tuple, lst)))
+        return [list(sublist) for sublist in unique_list]
+
     def parse_subcatalogs(self,subcatalogs,test=False):
         """Основной модуль парсинга
 
@@ -162,6 +166,7 @@ class Pars():#Thread):
             subcatalogs (_type_): [(подкаталог, ссылки подкаталога), ...]
         """
         for s in subcatalogs:
+            tovar_data = []
             try:
                 title = s[0]
                 print(f"Начинаю сбор для \"{title}\"")
@@ -172,7 +177,6 @@ class Pars():#Thread):
                     if len(links) > 0:
                         links = links[:10]
                 print(f"> Получены {len(links)} ссылок на товар. Собираю информацию...")
-                tovar_data = []
                 # собирает конкретные значения из товаров
                 
                 for step,link in enumerate(links):
@@ -195,12 +199,13 @@ class Pars():#Thread):
                             tovar[4] = sizes
                         tovar_data.append(tovar)
                 # Очистка дублей
-                tovar_data = set(tovar_data)
-                tovar_data = list(tovar_data)
-                
-                self.write_to_csv(title,tovar_data)
+                if tovar_data != []:
+                    tovar_data = self.remove_duplicates(tovar_data)
+                    self.write_to_csv(title,tovar_data)
+                else:
+                    print("Каталог пуст")
             except:
-                logging.error(f"Ошибка сбора данных в каталоге {s[0]} \n{traceback.format_exc()}")
+                logging.error(f"Ошибка сбора данных в каталоге {s[0]} \n{traceback.format_exc()}\n -- Набор данных --> {tovar_data}")
         return
     
     def single_tovar_grab(self,link):
