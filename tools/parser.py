@@ -71,6 +71,14 @@ class Pars():#Thread):
         options.add_experimental_option('excludeSwitches', ['enable-logging'])
         self.driver = webdriver.Chrome(ChromeDriverManager().install(), options=options)
         self.driver.set_window_size(1920, 1080)
+    
+    def remove_last_files(self):
+        import shutil,os
+        folder_path = 'data'  # Путь к папке data
+        # Удалить папку "data" со всем ее содержимым
+        shutil.rmtree(folder_path)
+        # Создать пустую папку "data"
+        os.mkdir(folder_path)
 
     def write_to_csv(self, filename, data):
         import csv 
@@ -80,7 +88,7 @@ class Pars():#Thread):
             writer = csv.writer(csvfile, delimiter=';', quoting=csv.QUOTE_MINIMAL)
             #(title, base_cost, sale_cost, articul, sizes, colors, description, img)
             # Добавляем заголовки колонок
-            header = ['Название', 'Базовая цена', 'Цена со скидкой', 'Артикул','Размеры','Цвет','Описание','Фото']  # Замените на свои заголовки
+            header = ['Название', 'Базовая цена', 'Цена со скидкой', 'Артикул','Размеры','Количество','Цвет','Описание','Фото']  # Замените на свои заголовки
             writer.writerow(header)
             # Записываем каждую строку данных в файл CSV
             for row in data:
@@ -140,7 +148,6 @@ class Pars():#Thread):
         except:
             return None
 
-    
     def parse_subcatalog_page_links(self,link):
         self.driver.get(link)
         # //a[@class="card-product js-card-product"]
@@ -185,18 +192,23 @@ class Pars():#Thread):
                     tovar = list(self.single_tovar_grab(link))
                     
                     # Разбиение по сраным цветам с зависимостью в виде размера
-                    colors = tovar[5].split(";")
+                    colors = tovar[6].split(";")
+                    counts = tovar[5]
                     sizes = tovar[4]
                     if len(colors) > 1:
                         for i in range(len(colors)):
                             new_tovar = tovar
-                            new_tovar[5] = colors[i]
+                            new_tovar[6] = colors[i]
+                            new_tovar[5] = counts[i]
                             new_tovar[4] = sizes[i]
                             tovar_data.append(new_tovar)
                     else:
                         if type(tovar[4]) == list:
                             sizes = ";".join(tovar[4])
                             tovar[4] = sizes
+                        if type(tovar[5]) == list:
+                            counts = ";".join(tovar[5])
+                            tovar[5] = counts
                         tovar_data.append(tovar)
                 # Очистка дублей
                 if tovar_data != []:
@@ -231,8 +243,9 @@ class Pars():#Thread):
         
         colors = []
         sizes = [] # зависит от colors
+        counts = [] # зависит от sizes
         try:
-            for color_button in self.driver.find_elements(By.XPATH,'//section[1]/div[2]/div//button'):
+            for index,color_button in enumerate(self.driver.find_elements(By.XPATH,'//section[1]/div[2]/div//button')):
                 self.action.move_to_element(color_button)
                 self.action.click(color_button)
                 self.action.perform()
@@ -242,6 +255,17 @@ class Pars():#Thread):
                         )
                     )
                 colors.append( self.driver.find_element(By.XPATH,'//span[@class="product-color__name js-color-name"]').text )
+                
+                """блок с добавлением количества товара"""
+                # //section[2]/div[i]/div//input[@class="counter js-counter"]
+                try:
+                    all_counts = list(map(lambda x: x.get_attribute('max'),self.driver.find_elements(By.XPATH,f'//section[2]/div[{index+1}]/div//input[@class="counter js-counter"]')))
+                    all_counts = list(filter(lambda x: x !="0",all_counts))                          
+                    counts.append(";".join(all_counts))
+                except:
+                    counts.append("-")
+                    logging.info(traceback.format_exc())
+            
             colors = ";".join(colors)
         except:
             colors = []
@@ -250,8 +274,16 @@ class Pars():#Thread):
             if colors == []:
                 sizes = list(map(lambda x: x.text, self.driver.find_elements(By.XPATH,'//div[@class="product-sizes__size js-size-wrap positioned-right"]/button')))
                 sizes = ";".join(sizes)
+                try:
+                    all_counts = list(map(lambda x: x.get_attribute('max'),self.driver.find_elements(By.XPATH,'//input[@class="counter js-counter"]')))
+                    all_counts = list(filter(lambda x: x !="0",all_counts))                          
+                    counts.append(";".join(all_counts))
+                except:
+                    counts.append("-")
+                    logging.info(traceback.format_exc())
         except:
             sizes = []
+            counts = []
         
         try:
             img = list(map(lambda x: x.get_attribute("src"), self.driver.find_elements(By.XPATH,'//div[@class="product__slider-container visible"]//img')))
@@ -262,13 +294,13 @@ class Pars():#Thread):
         
         try:
             base_cost = self.driver.find_element(By.XPATH,'//b[@class="product__price-price js-basic-price"]').text
-            base_cost = base_cost[:-5].replace(".",",")
+            base_cost = base_cost[:-4].replace(".",",").strip()
         except:
             base_cost = "Отсутствует"
 
         try:
             sale_cost = self.driver.find_element(By.XPATH,'//b[@class="product__price-price js-discount-price"]').text
-            sale_cost = sale_cost[:-5].replace(".",",")
+            sale_cost = sale_cost[:-4].replace(".",",").strip()
             
         except:
             sale_cost = "Отсутствует"
@@ -278,10 +310,15 @@ class Pars():#Thread):
         except exceptions.NoSuchElementException:
             description = "Отсутствует"
         
-        return (title, base_cost, sale_cost, articul, sizes, colors, description, img)
+        
+
+        return (title, base_cost, sale_cost, articul, sizes, counts, colors, description, img)
     
     def test(self):
+        self.remove_last_files()
+        print("Авторизация",end=" ")
         self.authorithation()
+        print("[Успешно]")
         catalog_data = self.catalog()
         sale_cat = list(map(lambda x: self.sale_catalog(x),catalog_data))
         catalog_data.extend(sale_cat)
@@ -292,20 +329,24 @@ class Pars():#Thread):
         subcatalogs = list(filter(lambda x: x != None, subcatalogs))
         print(logging.info(f"Список подкаталогов - {subcatalogs}"))
         self.parse_subcatalogs(subcatalogs,test=True)
+        print("Конец работы парсера")
 
     def test_pravki(self):
         self.authorithation()
         tovar_data = []
-        tovar = list(self.single_tovar_grab("https://clever-style.ru/catalog/zhenskoe/domashnyayaodezhda/tolstovkikhudi_1/clelh12106khudizhenskoe/"))
+        # tovar = list(self.single_tovar_grab("https://clever-style.ru/catalog/zhenskoe/domashnyayaodezhda/tolstovkikhudi_1/clelh12106khudizhenskoe/"))
+        tovar = list(self.single_tovar_grab("https://clever-style.ru/catalog/zhenskoe/odezhda/dzhemperykardigany_1/cle136238114ddzhemperzhenskiy/"))
         
-        colors = tovar[5].split(";")
+        colors = tovar[6].split(";")
+        counts = tovar[5]
         sizes = tovar[4]
         if len(colors) > 1:
-            print(sizes,colors)
+            print(sizes,colors,counts)
             for i in range(len(colors)):
                 new_tovar = tovar
                 print(colors[i],sizes[i])
-                new_tovar[5] = colors[i]
+                new_tovar[6] = colors[i]
+                new_tovar[5] = counts[i]
                 new_tovar[4] = sizes[i]
                 print(new_tovar)
                 tovar_data.extend(new_tovar)
@@ -314,14 +355,23 @@ class Pars():#Thread):
         print(tovar_data)
 
     def main(self):
+        print("Удаление прошлых сессий...")
+        self.remove_last_files()
+        print("Авторизация...", end=" ")
         self.authorithation()
+        print('[Успешно]')
+        print("Собираю каталоги...",end=" ")
         catalog_data = self.catalog()
         sale_cat = list(map(lambda x: self.sale_catalog(x),catalog_data))
         catalog_data.extend(sale_cat)
         catalog_data.reverse()
+        print("[Успешно]")
         logging.info(f"Список каталогов - {catalog_data}")
+        print("Собираю подкаталоги...",end = "")
         subcatalogs = list(map(lambda data: self.subcatalogs(data),catalog_data))
         subcatalogs = sum(subcatalogs,[])
         subcatalogs = list(filter(lambda x: x != None, subcatalogs))
-        print(logging.info(f"Список подкаталогов - {subcatalogs}"))
+        print("[Успешно]")
+        # print(logging.info(f"Список подкаталогов - {subcatalogs}"))
         self.parse_subcatalogs(subcatalogs)
+        print("Конец работы парсера")
